@@ -43,14 +43,3 @@ The API is organized with a **clear and modular** folder structure:
 
 ---
 
-## **🚀 Running the API Locally**
-### **1️⃣ Prerequisites**
-- Java 17+
-- Maven
-- MySQL (or PostgreSQL)
-
-### **2️⃣ Installation**
-```bash
-git clone https://github.com/user/DesignMyExperienceAPI.git
-cd DesignMyExperienceAPI
-mvn clean install
