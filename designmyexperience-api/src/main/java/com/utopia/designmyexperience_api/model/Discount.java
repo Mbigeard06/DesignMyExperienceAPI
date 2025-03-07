@@ -5,7 +5,9 @@ package com.utopia.designmyexperience_api.model;
  */
 public class Discount {
     private Long id;
-    private double percentage;
-    private String description;
+    private String code;
+    private double amount;
+    private java.util.Date startingDate;
+    private java.util.Date endingDate;
     private Offering offering;
 }

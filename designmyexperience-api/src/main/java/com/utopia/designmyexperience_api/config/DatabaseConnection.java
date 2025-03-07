@@ -2,10 +2,12 @@ package com.utopia.designmyexperience_api.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@Component
 public class DatabaseConnection implements IDatabaseConnection {
     private static final String URL = "jdbc:postgresql://localhost:5432/designmyexperience";
     private static final String USER = "mateo";

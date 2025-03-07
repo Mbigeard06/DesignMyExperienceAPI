@@ -8,4 +8,5 @@ public class Booking {
     private Client client;
     private Offering offering;
     private String status;
+    private java.util.Date bookingDate;
 }
