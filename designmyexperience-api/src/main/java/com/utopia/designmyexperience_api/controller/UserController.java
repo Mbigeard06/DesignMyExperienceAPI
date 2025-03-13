@@ -30,7 +30,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
     public User getUserById(@PathVariable int id) {
-        User user = userService.getUserById(id);
+        User user = userService.getUser(id);
         return user;
     }
 
@@ -51,6 +51,56 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of(
                             "error", "An error occurred while fetching users",
+                            "details", e.getMessage()
+                    ));
+        }
+    }
+
+    /**
+     * Get a business owner by ID.
+     * @param id The user ID.
+     * @return The user if found and is a business owner.
+     */
+    @GetMapping("/business-owners/{id}")
+    public ResponseEntity<?> getBusinessOwner(@PathVariable int id) {
+        try {
+            User user = userService.getBusinessOwner(id);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Business owner not found or user is not a business owner"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                            "error", "An error occurred while fetching business owner",
+                            "details", e.getMessage()
+                    ));
+        }
+    }
+
+    /**
+     * Get a client by ID.
+     * @param id The user ID.
+     * @return The user if found and is a client.
+     */
+    @GetMapping("/clients/{id}")
+    public ResponseEntity<?> getClient(@PathVariable int id) {
+        try {
+            User user = userService.getClient(id);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Client not found or user is not a client"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                            "error", "An error occurred while fetching the client",
                             "details", e.getMessage()
                     ));
         }

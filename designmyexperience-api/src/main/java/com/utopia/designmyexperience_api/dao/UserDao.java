@@ -1,6 +1,8 @@
 package com.utopia.designmyexperience_api.dao;
 
 import com.utopia.designmyexperience_api.config.DatabaseConnection;
+import com.utopia.designmyexperience_api.model.BusinessOwner;
+import com.utopia.designmyexperience_api.model.Client;
 import com.utopia.designmyexperience_api.model.User;
 import com.utopia.designmyexperience_api.model.enums.UserTypes;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,11 @@ public class UserDao implements IUserDao {
         this.databaseConnection = databaseConnection;
     }
 
+    /**
+     *
+     * @param id user id
+     * @return user
+     */
     @Override
     public User getUser(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";
@@ -79,5 +86,67 @@ public class UserDao implements IUserDao {
             throw new RuntimeException("Error retrieving users", e);
         }
         return users;
+    }
+
+    @Override
+    public BusinessOwner getBusinessOwner(int id) {
+        // Get the user first
+        User user = getUser(id);
+
+        if (user == null || user.getUserType() != UserTypes.BusinessOwner) {
+            return null; // The user is not a businnes owner
+        }
+
+        String sql = "SELECT * FROM businessowners WHERE id = ?";
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String businessName = rs.getString("businessname");
+                String businessAddress = rs.getString("businessaddress");
+                String businessDescription = rs.getString("businessdescription");
+
+                return new BusinessOwner(user, businessName, businessAddress, businessDescription, null); // null = offerings
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error retrieving business owner with ID: " + id, e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Client getClient(int id) {
+        // Get the user first
+        User user = getUser(id);
+
+        if (user == null || user.getUserType() != UserTypes.Client) {
+            return null; // The user is not a businnes owner
+        }
+
+        String sql = "SELECT * FROM clients WHERE id = ?";
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Client(user,null); // null = offerings
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error retrieving client with ID: " + id, e);
+        }
+
+        return null;
     }
 }

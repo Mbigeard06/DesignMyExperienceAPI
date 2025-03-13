@@ -49,6 +49,7 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
+
     // Getters and Setters (Recommandé pour la sérialisation)
     public Long getId() { return id; }
     public String getUserName() { return userName; }

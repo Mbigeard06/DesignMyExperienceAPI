@@ -20,7 +20,7 @@ public class UserService {
      * @param id The user ID.
      * @return User object if found, otherwise null.
      */
-    public User getUserById(int id) {
+    public User getUser(int id) {
         return userDao.getUser(id);
     }
 
@@ -30,6 +30,24 @@ public class UserService {
      */
     public List<User> getUsers(){
         return userDao.getUsers();
+    }
+
+    /**
+     *
+     * @param id user id
+     * @return business owner
+     */
+    public User getBusinessOwner(int id){
+        return userDao.getBusinessOwner(id);
+    }
+
+    /**
+     *
+     * @param id user id
+     * @return client
+     */
+    public User getClient(int id){
+        return userDao.getClient(id);
     }
 
 }
