@@ -1,14 +1,13 @@
 package com.utopia.designmyexperience_api.controller;
 
+import com.utopia.designmyexperience_api.dto.CreateBusinessOwnerRequest;
+import com.utopia.designmyexperience_api.dto.CreateClientRequest;
 import com.utopia.designmyexperience_api.model.User;
 import com.utopia.designmyexperience_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -87,7 +86,7 @@ public class UserController {
      * @return The user if found and is a client.
      */
     @GetMapping("/clients/{id}")
-    public ResponseEntity<?> getClient(@PathVariable int id) {
+    public ResponseEntity<?> getClient(@PathVariable int id, String hasedPassword) {
         try {
             User user = userService.getClient(id);
             if (user != null) {
@@ -106,4 +105,37 @@ public class UserController {
         }
     }
 
+    /**
+     * Create a new client.
+     * @param request The request containing the client and hashed password.
+     * @return Response with user ID or error.
+     */
+    @PostMapping("/clients")
+    public ResponseEntity<?> createClient(@RequestBody CreateClientRequest request) {
+        try {
+            int userId = userService.createClient(request.getClient(), request.getPassword());
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("userId", userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to create client", "details", e.getMessage()));
+        }
+    }
+
+    /**
+     * Create a new business owner.
+     * @param request The request containing the business owner and hashed password.
+     * @return Response with user ID or error.
+     */
+    @PostMapping("/business-owners")
+    public ResponseEntity<?> createBusinessOwner(@RequestBody CreateBusinessOwnerRequest request) {
+        try {
+            int userId = userService.createBusinessOwner(request.getBusinessOwner(), request.getPassword());
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("userId", userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to create business owner", "details", e.getMessage()));
+        }
+    }
 }

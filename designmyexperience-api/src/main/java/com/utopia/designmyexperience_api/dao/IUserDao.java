@@ -35,4 +35,18 @@ public interface IUserDao {
      * @return Client
      */
     Client getClient(int id);
+
+    /**
+     *
+     * @param businessOwner businessOwner to add in the db
+     * @return int -1 if failed
+     */
+    int createBusinessOwner(BusinessOwner businessOwner, String hashedPassword);
+
+    /**
+     *
+     * @param client to add in the db
+     * @return int -1 if failed
+     */
+    int createClient(Client client, String hashedPassword);
 }

@@ -11,9 +11,6 @@ public class User {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("userName")
-    private String userName;
-
     @JsonProperty("firstName")
     private String firstName;
 
@@ -36,10 +33,13 @@ public class User {
     @JsonProperty("profilePicture")
     private byte[] profilePicture;
 
-    public User(Long id, String userName, String firstName, String lastName,
+    public User() {
+        // Empty constructor required by Jackson
+    }
+
+    public User(Long id, String firstName, String lastName,
                 String phone, String email, String address, UserTypes userType, byte[] profilePicture) {
         this.id = id;
-        this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -52,7 +52,6 @@ public class User {
 
     // Getters and Setters (Recommandé pour la sérialisation)
     public Long getId() { return id; }
-    public String getUserName() { return userName; }
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }
     public String getPhone() { return phone; }

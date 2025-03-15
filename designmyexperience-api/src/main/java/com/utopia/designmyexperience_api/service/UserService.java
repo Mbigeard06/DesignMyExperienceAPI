@@ -1,6 +1,8 @@
 package com.utopia.designmyexperience_api.service;
 
 import com.utopia.designmyexperience_api.dao.IUserDao;
+import com.utopia.designmyexperience_api.model.BusinessOwner;
+import com.utopia.designmyexperience_api.model.Client;
 import com.utopia.designmyexperience_api.model.User;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +50,26 @@ public class UserService {
      */
     public User getClient(int id){
         return userDao.getClient(id);
+    }
+
+    /**
+     *
+     * @param businessOwner
+     * @param password
+     * @return index of the business owner created (-1 if failed)
+     */
+    public int createBusinessOwner(BusinessOwner businessOwner, String password){
+        return userDao.createBusinessOwner(businessOwner, password);
+    }
+
+    /**
+     *
+     * @param client client to create
+     * @param password password
+     * @return index of the client created (-1 if failed)
+     */
+    public int createClient(Client client, String password){
+        return userDao.createClient(client, password);
     }
 
 }

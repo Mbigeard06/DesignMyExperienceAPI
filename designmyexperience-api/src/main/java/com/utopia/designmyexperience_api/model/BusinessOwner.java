@@ -21,6 +21,10 @@ public class BusinessOwner extends User {
     @JsonProperty("offerings")
     private List<Offering> offerings;
 
+    public BusinessOwner() {
+        super(); // You can put null or default values
+    }
+
     /**
      * Constructs a BusinessOwner object based on an existing User and additional business-related details.
      *
@@ -31,7 +35,7 @@ public class BusinessOwner extends User {
      * @param offerings           The list of offerings (activities or services) provided by the business owner.
      */
     public BusinessOwner(User user, String businessName, String businessAddress, String businessDescription, List<Offering> offerings) {
-        super(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(),
+        super(user.getId(), user.getFirstName(), user.getLastName(),
                 user.getPhone(), user.getEmail(), user.getAddress(),
                 user.getUserType(), user.getProfilePicture());
         this.businessName = businessName;
@@ -39,6 +43,7 @@ public class BusinessOwner extends User {
         this.businessDescription = businessDescription;
         this.offerings = offerings;
     }
+
 
     /**
      * Sets the list of offerings proposed by the business owner.

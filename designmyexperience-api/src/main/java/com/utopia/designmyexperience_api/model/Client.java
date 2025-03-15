@@ -18,11 +18,14 @@ public class Client extends User {
     @JsonProperty("bookings")
     private List<Booking> bookings;
 
+    public Client(){
+        super();
+    }
+
     /**
      * Constructs a Client object from basic user attributes (used when bookings are not yet loaded).
      *
      * @param id              The unique identifier of the user.
-     * @param userName        The username of the client.
      * @param firstName       The first name of the client.
      * @param lastName        The last name of the client.
      * @param phone           The phone number of the client.
@@ -31,9 +34,9 @@ public class Client extends User {
      * @param userType        The type of user (should be CLIENT).
      * @param profilePicture  The profile picture of the client (as a byte array).
      */
-    public Client(Long id, String userName, String firstName, String lastName,
+    public Client(Long id, String firstName, String lastName,
                   String phone, String email, String address, UserTypes userType, byte[] profilePicture) {
-        super(id, userName, firstName, lastName, phone, email, address, userType, profilePicture);
+        super(id, firstName, lastName, phone, email, address, userType, profilePicture);
     }
 
     /**
@@ -43,7 +46,7 @@ public class Client extends User {
      * @param bookings The list of bookings made by the client.
      */
     public Client(User user, List<Booking> bookings) {
-        super(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(),
+        super(user.getId(), user.getFirstName(), user.getLastName(),
                 user.getPhone(), user.getEmail(), user.getAddress(),
                 user.getUserType(), user.getProfilePicture());
         this.bookings = bookings;
