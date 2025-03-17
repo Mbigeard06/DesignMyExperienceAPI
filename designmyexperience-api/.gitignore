@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Ignore DatabaseConnection file
+src/main/java/com/utopia/designmyexperience_api/config/DatabaseConnection.java

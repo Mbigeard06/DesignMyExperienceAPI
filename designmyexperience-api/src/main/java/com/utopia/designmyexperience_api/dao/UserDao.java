@@ -244,4 +244,41 @@ public class UserDao implements IUserDao {
 
         return userId;
     }
+
+    public User checkCredentiels(String mail, String plainPassword) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, mail);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String hashedPwd = rs.getString("hashedpwd");
+                if (hashedPwd.equals(plainPassword)) {
+                    return new User(
+                            rs.getLong("id"),
+                            rs.getString("firstName"),
+                            rs.getString("lastName"),
+                            rs.getString("phone"),
+                            rs.getString("email"),
+                            rs.getString("address"),
+                            UserTypes.valueOf(rs.getString("userType")),
+                            rs.getBytes("profilePicture")
+                    );
+                } else {
+                    System.out.println("❌ Incorrect password for user with email: " + mail);
+                }
+
+            } else {
+                System.out.println("❌ No user found with email: " + mail);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("❌ Error checking credentials", e);
+        }
+
+        return null;
+    }
 }

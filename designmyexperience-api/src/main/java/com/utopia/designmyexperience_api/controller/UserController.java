@@ -2,6 +2,7 @@ package com.utopia.designmyexperience_api.controller;
 
 import com.utopia.designmyexperience_api.dto.CreateBusinessOwnerRequest;
 import com.utopia.designmyexperience_api.dto.CreateClientRequest;
+import com.utopia.designmyexperience_api.dto.LoginRequest;
 import com.utopia.designmyexperience_api.model.User;
 import com.utopia.designmyexperience_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,29 @@ public class UserController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to create business owner", "details", e.getMessage()));
+        }
+    }
+
+    /**
+     * Authenticate a user with email and password.
+     * @param request The login request with email and password.
+     * @return The authenticated user if credentials are correct.
+     */
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        try {
+            User user = userService.checkCredential(request.getEmail(), request.getPassword());
+
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid email or password"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "An error occurred during login", "details", e.getMessage()));
         }
     }
 }

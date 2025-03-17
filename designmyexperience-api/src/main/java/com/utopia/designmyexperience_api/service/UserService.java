@@ -72,4 +72,21 @@ public class UserService {
         return userDao.createClient(client, password);
     }
 
+    /**
+     * Checks user credentials based on email and password.
+     * @param email Email used to authenticate.
+     * @param password Raw password to compare.
+     * @return The authenticated User if credentials are correct, otherwise null.
+     */
+    public User checkCredential(String email, String password){
+        try {
+            return userDao.checkCredentiels(email, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error checking user credentials", e);
+        }
+    }
+
+
+
 }

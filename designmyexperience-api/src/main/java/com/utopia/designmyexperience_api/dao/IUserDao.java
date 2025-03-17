@@ -49,4 +49,12 @@ public interface IUserDao {
      * @return int -1 if failed
      */
     int createClient(Client client, String hashedPassword);
+
+    /**
+     *
+     * @param mail client mail
+     * @param plainPassword client password input
+     * @return User if the credentials are valid
+     */
+    public User checkCredentiels(String mail, String plainPassword);
 }
