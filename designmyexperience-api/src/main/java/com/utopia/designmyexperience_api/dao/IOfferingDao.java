@@ -43,6 +43,4 @@ public interface IOfferingDao {
     public List<Offering> getOfferings();
 
 
-    public int createOffering();
-
 }
