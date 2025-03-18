@@ -42,5 +42,15 @@ public interface IOfferingDao {
      */
     public List<Offering> getOfferings();
 
+    /**
+     *
+     * @return id of the offering create
+     */
+    public int createService();
 
+    /**
+     *
+     * @return id of the offering create
+     */
+    public int createActivity();
 }

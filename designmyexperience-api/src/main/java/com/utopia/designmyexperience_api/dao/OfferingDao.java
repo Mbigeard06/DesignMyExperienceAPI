@@ -5,6 +5,7 @@ import com.utopia.designmyexperience_api.model.Activity;
 import com.utopia.designmyexperience_api.model.Offering;
 import com.utopia.designmyexperience_api.model.Service;
 import com.utopia.designmyexperience_api.model.enums.OfferingTypes;
+import com.utopia.designmyexperience_api.service.UserService;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -18,9 +19,11 @@ import java.util.List;
 public class OfferingDao implements IOfferingDao {
 
     private final DatabaseConnection databaseConnection;
+    private final UserService userService;
 
-    public OfferingDao(DatabaseConnection databaseConnection) {
+    public OfferingDao(DatabaseConnection databaseConnection, UserService userService) {
         this.databaseConnection = databaseConnection;
+        this.userService = userService;
     }
 
     @Override
@@ -154,6 +157,7 @@ public class OfferingDao implements IOfferingDao {
         offering.setPicture(rs.getBytes("picture"));
         offering.setPrice(rs.getDouble("price"));
         offering.setDuration(rs.getDouble("duration"));
+        offering.setBusinessOwner(userService.getBusinessOwner(rs.getInt("businessowner_id")));
         return offering;
     }
 
@@ -167,16 +171,7 @@ public class OfferingDao implements IOfferingDao {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Offering offering = new Offering();
-                offering.setId(rs.getLong("id"));
-                offering.setTitle(rs.getString("title"));
-                offering.setDescription(rs.getString("description"));
-                offering.setCapacity(rs.getInt("capacity"));
-                offering.setLocation(rs.getString("location"));
-                offering.setType(OfferingTypes.valueOf(rs.getString("type")));
-                offering.setPicture(rs.getBytes("picture"));
-                offering.setPrice(rs.getDouble("price"));
-                offering.setDuration(rs.getDouble("duration"));
+                Offering offering = buildBasicOfferingFromResultSet(rs);
                 offerings.add(offering);
             }
 
@@ -186,5 +181,15 @@ public class OfferingDao implements IOfferingDao {
         }
 
         return offerings;
+    }
+
+    @Override
+    public int createService() {
+        return 0;
+    }
+
+    @Override
+    public int createActivity() {
+        return 0;
     }
 }

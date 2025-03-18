@@ -39,7 +39,7 @@ public class UserService {
      * @param id user id
      * @return business owner
      */
-    public User getBusinessOwner(int id){
+    public BusinessOwner getBusinessOwner(int id){
         return userDao.getBusinessOwner(id);
     }
 
@@ -48,7 +48,7 @@ public class UserService {
      * @param id user id
      * @return client
      */
-    public User getClient(int id){
+    public Client getClient(int id){
         return userDao.getClient(id);
     }
 
