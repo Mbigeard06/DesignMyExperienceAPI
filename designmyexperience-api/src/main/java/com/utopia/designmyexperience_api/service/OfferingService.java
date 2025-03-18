@@ -55,4 +55,12 @@ public class OfferingService {
     public Service getService(int serviceId) {
         return offeringDao.getService(serviceId);
     }
+
+    /**
+     *
+     * @return List of offering for a client
+     */
+    public List<Offering> getOfferings(){
+        return offeringDao.getOfferings();
+    }
 }

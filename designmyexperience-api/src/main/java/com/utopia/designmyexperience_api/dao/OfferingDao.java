@@ -156,4 +156,35 @@ public class OfferingDao implements IOfferingDao {
         offering.setDuration(rs.getDouble("duration"));
         return offering;
     }
+
+    @Override
+    public List<Offering> getOfferings() {
+        List<Offering> offerings = new ArrayList<>();
+        String sql = "SELECT * FROM offerings";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Offering offering = new Offering();
+                offering.setId(rs.getLong("id"));
+                offering.setTitle(rs.getString("title"));
+                offering.setDescription(rs.getString("description"));
+                offering.setCapacity(rs.getInt("capacity"));
+                offering.setLocation(rs.getString("location"));
+                offering.setType(OfferingTypes.valueOf(rs.getString("type")));
+                offering.setPicture(rs.getBytes("picture"));
+                offering.setPrice(rs.getDouble("price"));
+                offering.setDuration(rs.getDouble("duration"));
+                offerings.add(offering);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error retrieving offerings", e);
+        }
+
+        return offerings;
+    }
 }

@@ -35,4 +35,14 @@ public interface IOfferingDao {
      * @return service
      */
     public Service getService(int id);
+
+    /**
+     *
+     * @return List of offerings for the client
+     */
+    public List<Offering> getOfferings();
+
+
+    public int createOffering();
+
 }

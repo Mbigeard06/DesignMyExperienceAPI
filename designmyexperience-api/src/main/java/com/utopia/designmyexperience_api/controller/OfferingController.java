@@ -105,4 +105,20 @@ public class OfferingController {
                     .body(Map.of("error", "An error occurred while fetching service", "details", e.getMessage()));
         }
     }
+
+    /**
+     * Get all offerings (global list for all clients or general display).
+     * @return List of all offerings
+     */
+    @GetMapping
+    public ResponseEntity<?> getAllOfferings() {
+        try {
+            List<Offering> offerings = offeringService.getOfferings();
+            return ResponseEntity.ok(offerings);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "An error occurred while fetching all offerings", "details", e.getMessage()));
+        }
+    }
 }
