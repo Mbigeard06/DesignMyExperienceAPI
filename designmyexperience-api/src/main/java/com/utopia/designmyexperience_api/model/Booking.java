@@ -1,12 +1,70 @@
 package com.utopia.designmyexperience_api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Date;
+
 /**
- * Represent a booking made by a client for a specific offering.
+ * Represents a booking made by a client for a specific offering.
  */
 public class Booking {
+
+    @JsonProperty("id")
     private Long id;
+
+    @JsonProperty("client")
     private Client client;
+
+    @JsonProperty("offering")
     private Offering offering;
-    private String status;
-    private java.util.Date bookingDate;
+
+    @JsonProperty("bookingDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Date bookingDate;
+
+    // Constructors
+    public Booking() {
+    }
+
+    public Booking(Long id, Client client, Offering offering, Date bookingDate) {
+        this.id = id;
+        this.client = client;
+        this.offering = offering;
+        this.bookingDate = bookingDate;
+    }
+
+    // Getters and Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public Offering getOffering() {
+        return offering;
+    }
+
+    public void setOffering(Offering offering) {
+        this.offering = offering;
+    }
+
+    public Date getBookingDate() {
+        return bookingDate;
+    }
+
+    public void setBookingDate(Date bookingDate) {
+        this.bookingDate = bookingDate;
+    }
 }
