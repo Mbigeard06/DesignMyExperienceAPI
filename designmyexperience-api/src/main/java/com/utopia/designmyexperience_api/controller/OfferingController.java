@@ -121,4 +121,71 @@ public class OfferingController {
                     .body(Map.of("error", "An error occurred while fetching all offerings", "details", e.getMessage()));
         }
     }
+
+    /**
+     * Create a new activity offering.
+     * @param activity Activity object to be created
+     * @return ID of the created activity
+     */
+    @PostMapping("/activities")
+    public ResponseEntity<?> createActivity(@RequestBody Activity activity) {
+        try {
+            int activityId = offeringService.createActivity(activity);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("activityId", activityId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to create activity", "details", e.getMessage()));
+        }
+    }
+
+    /**
+     * Create a new service offering.
+     * @param service Service object to be created
+     * @return ID of the created service
+     */
+    @PostMapping("/services")
+    public ResponseEntity<?> createService(@RequestBody Service service) {
+        try {
+            int serviceId = offeringService.createService(service);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("serviceId", serviceId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to create service", "details", e.getMessage()));
+        }
+    }
+
+    /**
+     * Get all services.
+     * @return List of all service offerings
+     */
+    @GetMapping("/services")
+    public ResponseEntity<?> getAllServices() {
+        try {
+            List<Service> services = offeringService.getAllServices();
+            return ResponseEntity.ok(services);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "An error occurred while fetching services", "details", e.getMessage()));
+        }
+    }
+
+    /**
+     * Get all upcoming activities (startDate > now).
+     * @return List of future activities
+     */
+    @GetMapping("/activities/upcoming")
+    public ResponseEntity<?> getUpcomingActivities() {
+        try {
+            List<Activity> activities = offeringService.getUpcomingActivities();
+            return ResponseEntity.ok(activities);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "An error occurred while fetching upcoming activities", "details", e.getMessage()));
+        }
+    }
+
 }

@@ -6,8 +6,6 @@ import com.utopia.designmyexperience_api.model.Activity;
 import com.utopia.designmyexperience_api.model.Offering;
 import com.utopia.designmyexperience_api.model.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -57,10 +55,44 @@ public class OfferingService {
     }
 
     /**
-     *
-     * @return List of offering for a client
+     * Get all offerings.
+     * @return List of all offerings
      */
-    public List<Offering> getOfferings(){
+    public List<Offering> getOfferings() {
         return offeringDao.getOfferings();
+    }
+
+    /**
+     * Create a new activity offering.
+     * @param activity the activity to be created
+     * @return the ID of the newly created activity
+     */
+    public int createActivity(Activity activity) {
+        return offeringDao.createActivity(activity);
+    }
+
+    /**
+     * Create a new service offering.
+     * @param service the service to be created
+     * @return the ID of the newly created service
+     */
+    public int createService(Service service) {
+        return offeringDao.createService(service);
+    }
+
+    /**
+     * Get all services.
+     * @return list of all services
+     */
+    public List<Service> getAllServices() {
+        return offeringDao.getAllServices();
+    }
+
+    /**
+     * Get upcoming activities with startDate > now.
+     * @return list of upcoming activities
+     */
+    public List<Activity> getUpcomingActivities() {
+        return offeringDao.getAllUpcomingActivities();
     }
 }

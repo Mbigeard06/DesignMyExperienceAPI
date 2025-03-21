@@ -8,10 +8,8 @@ import com.utopia.designmyexperience_api.model.enums.OfferingTypes;
 import com.utopia.designmyexperience_api.service.UserService;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -183,13 +181,165 @@ public class OfferingDao implements IOfferingDao {
         return offerings;
     }
 
-    @Override
-    public int createService() {
-        return 0;
+    /**
+     * Creates a generic offering in the database.
+     * @param offering The base offering data to insert.
+     * @return The generated ID of the created offering.
+     */
+    public long createOffering(Offering offering) {
+        String sql = "INSERT INTO offerings (title, description, capacity, location, type, picture, price, duration, businessowner_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, offering.getTitle());
+            stmt.setString(2, offering.getDescription());
+            stmt.setInt(3, offering.getCapacity());
+            stmt.setString(4, offering.getLocation());
+            stmt.setString(5, offering.getType().name());
+            stmt.setBytes(6, offering.getPicture());
+            stmt.setDouble(7, offering.getPrice());
+            stmt.setDouble(8, offering.getDuration());
+            stmt.setLong(9, offering.getBusinessOwner().getId());
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getLong("id");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error while creating offering", e);
+        }
+
+        return -1;
     }
 
+    /**
+     * Creates an activity by first creating a base offering and then adding activity-specific fields.
+     * @param activity The Activity object to be stored.
+     * @return The ID of the created activity (same as the offering ID).
+     */
     @Override
-    public int createActivity() {
-        return 0;
+    public int createActivity(Activity activity) {
+        long offeringId = createOffering(activity);
+
+        if (offeringId <= 0) {
+            throw new RuntimeException("Failed to create offering for the activity.");
+        }
+
+        String sql = "INSERT INTO activities (id, startdate, enddate, equipementprovided) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, offeringId);
+            stmt.setDate(2, new java.sql.Date(activity.getStartDate().getTime()));
+            stmt.setDate(3, new java.sql.Date(activity.getEndDate().getTime()));
+            stmt.setBoolean(4, activity.getEquipementProvided());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error while creating activity details", e);
+        }
+
+        return (int) offeringId;
+    }
+
+    /**
+     * Creates a service offering in the database.
+     * First inserts a generic offering, then adds service-specific fields.
+     *
+     * @param service The Service object to insert.
+     * @return The ID of the created service (same as the offering ID).
+     */
+    @Override
+    public int createService(Service service) {
+        long offeringId = createOffering(service);
+
+        if (offeringId <= 0) {
+            throw new RuntimeException("Failed to create offering for the service.");
+        }
+
+        String sql = "INSERT INTO services (id, opening, closing, ondemand, servicearea) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, offeringId);
+            stmt.setTimestamp(2, new java.sql.Timestamp(service.getOpening().getTime()));
+            stmt.setTimestamp(3, new java.sql.Timestamp(service.getClosing().getTime()));
+            stmt.setBoolean(4, service.isOnDemand());
+            stmt.setString(5, service.getServiceArea());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error while creating service details", e);
+        }
+
+        return (int) offeringId;
+    }
+
+    /**
+     * Retrieves all upcoming activities (startDate after current timestamp).
+     * @return List of upcoming Activity offerings.
+     */
+    public List<Activity> getAllUpcomingActivities() {
+        List<Activity> activities = new ArrayList<>();
+        String sql = "SELECT * FROM activities WHERE startdate > ?";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                Activity activity = getActivity(id);
+                if (activity != null) {
+                    activities.add(activity);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error fetching upcoming activities", e);
+        }
+
+        return activities;
+    }
+
+    /**
+     * Retrieves all services from the database.
+     * @return List of all Service offerings.
+     */
+    public List<Service> getAllServices() {
+        List<Service> services = new ArrayList<>();
+        String sql = "SELECT * FROM services";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                Service service = getService(id);
+                if (service != null) {
+                    services.add(service);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error fetching all services", e);
+        }
+
+        return services;
     }
 }

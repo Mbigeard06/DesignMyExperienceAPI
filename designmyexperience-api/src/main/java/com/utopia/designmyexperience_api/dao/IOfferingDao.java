@@ -46,11 +46,23 @@ public interface IOfferingDao {
      *
      * @return id of the offering create
      */
-    public int createService();
+    public int createService(Service service);
 
     /**
      *
      * @return id of the offering create
      */
-    public int createActivity();
+    public int createActivity(Activity activity);
+
+    /**
+     *
+     * @return List of the upcoming activities
+     */
+    public List<Activity> getAllUpcomingActivities();
+
+    /**
+     *
+     * @return Lit of all the services
+     */
+    List<Service> getAllServices();
 }
