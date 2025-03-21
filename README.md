@@ -20,28 +20,31 @@ The API is organized with a **clear and modular** folder structure:
 ✅ **Enhanced security**: DTOs prevent sensitive data exposure.  
 ✅ **Scalability**: The structure allows easy expansion of features.  
 
----
-
 ## 🔌 API Endpoints
 
-| **Method** | **Endpoint**                         | **Description**                                      |
-|------------|--------------------------------------|------------------------------------------------------|
-| `POST`     | `/api/users/login`                   | Authenticates a user by email and password.          |
-| `POST`     | `/api/users/clients`                 | Creates a new client user.                           |
-| `POST`     | `/api/users/business-owners`         | Creates a new business owner user.                   |
-| `GET`      | `/api/users/{id}`                    | Retrieves a user by ID.                              |
-| `GET`      | `/api/users`                         | Retrieves a list of all users.                       |
-| `GET`      | `/api/users/clients/{id}`            | Retrieves a client user by ID.                       |
-| `GET`      | `/api/users/business-owners/{id}`    | Retrieves a business owner by ID.                    |
-| `GET`      | `/api/offerings`                     | Retrieves all offerings.                             |
-| `GET`      | `/api/offerings/{id}`                | Retrieves a specific offering by ID.                 |
-| `GET`      | `/api/offerings/business-owner/{id}` | Retrieves offerings by business owner ID.            |
-| `GET`      | `/api/offerings/activities/{id}`     | Retrieves an activity offering by ID.                |
-| `GET`      | `/api/offerings/services/{id}`       | Retrieves a service offering by ID.                  |
+| **Method** | **Endpoint**                         | **Description**                                           |
+|------------|--------------------------------------|-----------------------------------------------------------|
+| `POST`     | `/api/users/login`                   | Authenticates a user by email and password.               |
+| `POST`     | `/api/users/clients`                 | Creates a new client user.                                |
+| `POST`     | `/api/users/business-owners`         | Creates a new business owner user.                        |
+| `GET`      | `/api/users/{id}`                    | Retrieves a user by ID.                                   |
+| `GET`      | `/api/users`                         | Retrieves a list of all users.                            |
+| `GET`      | `/api/users/clients/{id}`            | Retrieves a client user by ID.                            |
+| `GET`      | `/api/users/business-owners/{id}`    | Retrieves a business owner user by ID.                    |
+| `GET`      | `/api/offerings`                     | Retrieves all offerings.                                  |
+| `GET`      | `/api/offerings/{id}`                | Retrieves a specific offering by ID.                      |
+| `GET`      | `/api/offerings/business-owner/{id}` | Retrieves offerings by business owner ID.                 |
+| `GET`      | `/api/offerings/activities/{id}`     | Retrieves an activity offering by ID.                     |
+| `GET`      | `/api/offerings/services/{id}`       | Retrieves a service offering by ID.                       |
+| `POST`     | `/api/offerings/activities`          | Creates a new activity offering.                          |
+| `POST`     | `/api/offerings/services`            | Creates a new service offering.                           |
+| `GET`      | `/api/bookings/client/{clientId}`    | Retrieves all bookings for a specific client.             |
+| `GET`      | `/api/bookings/offering/{offeringId}`| Retrieves all bookings related to a specific offering.    |
+| `POST`     | `/api/bookings/create`               | Creates a booking for a specific offering and client.     |
 
 ---
 
-✅ **Swagger UI** is available for interactive API testing (if enabled via SpringDoc or SpringFox).
+✅ **Swagger UI** is available for API testing.
 
 ---
 
