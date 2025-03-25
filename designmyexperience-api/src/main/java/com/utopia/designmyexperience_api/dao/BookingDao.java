@@ -6,10 +6,8 @@ import com.utopia.designmyexperience_api.service.OfferingService;
 import com.utopia.designmyexperience_api.service.UserService;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +68,7 @@ public class BookingDao implements IBookingDao {
 
             stmt.setLong(1, offeringId);
             stmt.setLong(2, client_id); // Assuming business owner acts as client here
-            stmt.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+            stmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -124,7 +122,7 @@ public class BookingDao implements IBookingDao {
     private Booking buildBookingFromResultSet(ResultSet rs) throws SQLException {
         Booking booking = new Booking();
         booking.setId(rs.getLong("id"));
-        booking.setBookingDate(rs.getDate("bookingdate"));
+        booking.setBookingDate(rs.getTimestamp("bookingdate").toLocalDateTime());
         booking.setClient(userService.getClient(rs.getInt("client_id")));
         booking.setOffering(offeringService.getOffering(rs.getInt("offering_id")));
         return booking;

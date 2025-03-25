@@ -91,8 +91,8 @@ public class OfferingDao implements IOfferingDao {
                         base.getPrice(),
                         base.getBusinessOwner(),
                         base.getDuration(),
-                        rs.getDate("startdate"),
-                        rs.getDate("enddate"),
+                        rs.getTimestamp("startdate").toLocalDateTime(),
+                        rs.getTimestamp("enddate").toLocalDateTime(),
                         rs.getBoolean("equipementprovided")
                 );
             }
@@ -235,8 +235,8 @@ public class OfferingDao implements IOfferingDao {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, offeringId);
-            stmt.setDate(2, new java.sql.Date(activity.getStartDate().getTime()));
-            stmt.setDate(3, new java.sql.Date(activity.getEndDate().getTime()));
+            stmt.setTimestamp(2, Timestamp.valueOf(activity.getStartDate()));
+            stmt.setTimestamp(3, Timestamp.valueOf(activity.getEndDate()));
             stmt.setBoolean(4, activity.getEquipementProvided());
 
             stmt.executeUpdate();

@@ -3,11 +3,8 @@ package com.utopia.designmyexperience_api.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-/**
- * Represents a booking made by a client for a specific offering.
- */
 public class Booking {
 
     @JsonProperty("id")
@@ -21,13 +18,13 @@ public class Booking {
 
     @JsonProperty("bookingDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Date bookingDate;
+    private LocalDateTime bookingDate;
 
     // Constructors
     public Booking() {
     }
 
-    public Booking(Long id, Client client, Offering offering, Date bookingDate) {
+    public Booking(Long id, Client client, Offering offering, LocalDateTime bookingDate) {
         this.id = id;
         this.client = client;
         this.offering = offering;
@@ -60,11 +57,11 @@ public class Booking {
         this.offering = offering;
     }
 
-    public Date getBookingDate() {
+    public LocalDateTime getBookingDate() {
         return bookingDate;
     }
 
-    public void setBookingDate(Date bookingDate) {
+    public void setBookingDate(LocalDateTime bookingDate) {
         this.bookingDate = bookingDate;
     }
 }
