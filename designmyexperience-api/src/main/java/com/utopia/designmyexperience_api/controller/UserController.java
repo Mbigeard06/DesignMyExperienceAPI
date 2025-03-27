@@ -3,6 +3,8 @@ package com.utopia.designmyexperience_api.controller;
 import com.utopia.designmyexperience_api.dto.CreateBusinessOwnerRequest;
 import com.utopia.designmyexperience_api.dto.CreateClientRequest;
 import com.utopia.designmyexperience_api.dto.LoginRequest;
+import com.utopia.designmyexperience_api.model.BusinessOwner;
+import com.utopia.designmyexperience_api.model.Client;
 import com.utopia.designmyexperience_api.model.User;
 import com.utopia.designmyexperience_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +66,9 @@ public class UserController {
     @GetMapping("/business-owners/{id}")
     public ResponseEntity<?> getBusinessOwner(@PathVariable int id) {
         try {
-            User user = userService.getBusinessOwner(id);
-            if (user != null) {
-                return ResponseEntity.ok(user);
+            BusinessOwner businessOwner = userService.getBusinessOwner(id);
+            if (businessOwner != null) {
+                return ResponseEntity.ok(businessOwner);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("error", "Business owner not found or user is not a business owner"));
@@ -89,9 +91,9 @@ public class UserController {
     @GetMapping("/clients/{id}")
     public ResponseEntity<?> getClient(@PathVariable int id, String hasedPassword) {
         try {
-            User user = userService.getClient(id);
-            if (user != null) {
-                return ResponseEntity.ok(user);
+            Client client = userService.getClient(id);
+            if (client != null) {
+                return ResponseEntity.ok(client);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("error", "Client not found or user is not a client"));
