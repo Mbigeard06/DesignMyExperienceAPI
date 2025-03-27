@@ -1,6 +1,7 @@
 package com.utopia.designmyexperience_api.service;
 
 import com.utopia.designmyexperience_api.dao.IBookingDao;
+import com.utopia.designmyexperience_api.dao.IOfferingDao;
 import com.utopia.designmyexperience_api.model.Booking;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,11 @@ import java.util.List;
 public class BookingService {
 
     private final IBookingDao bookingDao;
+    private final IOfferingDao offeringDao;
 
-    public BookingService(IBookingDao bookingDao) {
+    public BookingService(IBookingDao bookingDao, IOfferingDao offeringDao) {
         this.bookingDao = bookingDao;
+        this.offeringDao = offeringDao;
     }
 
     /**
@@ -42,6 +45,11 @@ public class BookingService {
      * @return booking ID
      */
     public int createBooking(int offeringId, int clientId) {
-        return bookingDao.setBooking(offeringId, clientId);
+        int remaining = offeringDao.getRemainingCapacity(offeringId) ;
+        if (remaining > 0) {
+            return bookingDao.setBooking(offeringId, clientId);
+        } else {
+            throw new RuntimeException("No more capacity available for this offering.");
+        }
     }
 }

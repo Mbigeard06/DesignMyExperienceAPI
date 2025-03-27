@@ -33,4 +33,5 @@ public interface IBookingDao {
      * @return A list of bookings related to the given offering.
      */
     List<Booking> getBookingOffering(int id);
+
 }
