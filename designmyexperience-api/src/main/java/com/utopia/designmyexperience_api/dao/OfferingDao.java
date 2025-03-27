@@ -92,8 +92,7 @@ public class OfferingDao implements IOfferingDao {
                         base.getBusinessOwner(),
                         base.getDuration(),
                         rs.getTimestamp("startdate").toLocalDateTime(),
-                        rs.getTimestamp("enddate").toLocalDateTime(),
-                        rs.getBoolean("equipementprovided")
+                        rs.getTimestamp("enddate").toLocalDateTime()
                 );
             }
 
@@ -229,7 +228,7 @@ public class OfferingDao implements IOfferingDao {
             throw new RuntimeException("Failed to create offering for the activity.");
         }
 
-        String sql = "INSERT INTO activities (id, startdate, enddate, equipementprovided) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO activities (id, startdate, enddate) VALUES (?, ?, ?)";
 
         try (Connection conn = databaseConnection.getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -237,7 +236,6 @@ public class OfferingDao implements IOfferingDao {
             stmt.setLong(1, offeringId);
             stmt.setTimestamp(2, Timestamp.valueOf(activity.getStartDate()));
             stmt.setTimestamp(3, Timestamp.valueOf(activity.getEndDate()));
-            stmt.setBoolean(4, activity.getEquipementProvided());
 
             stmt.executeUpdate();
 

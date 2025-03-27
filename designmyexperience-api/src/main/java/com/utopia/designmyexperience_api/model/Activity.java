@@ -1,7 +1,6 @@
 package com.utopia.designmyexperience_api.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.utopia.designmyexperience_api.model.enums.OfferingTypes;
 
 import java.time.LocalDateTime;
@@ -17,13 +16,11 @@ public class Activity extends Offering {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startDate;
 
-    @JsonProperty("equipementProvided")
-    private Boolean equipementProvided;
 
     // Constructor
     public Activity(Long id, String title, String description, int capacity, String location,
                     OfferingTypes type, byte[] picture, double price, BusinessOwner businessOwner,
-                    double duration, LocalDateTime startDate, LocalDateTime endDate, Boolean equipementProvided) {
+                    double duration, LocalDateTime startDate, LocalDateTime endDate) {
         setId(id);
         setTitle(title);
         setDescription(description);
@@ -36,7 +33,6 @@ public class Activity extends Offering {
         setDuration(duration);
         this.startDate = startDate;
         this.endDate = endDate;
-        this.equipementProvided = equipementProvided;
     }
 
     public LocalDateTime getStartDate() {
@@ -53,13 +49,5 @@ public class Activity extends Offering {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }
-
-    public Boolean getEquipementProvided() {
-        return equipementProvided;
-    }
-
-    public void setEquipementProvided(Boolean equipementProvided) {
-        this.equipementProvided = equipementProvided;
     }
 }
