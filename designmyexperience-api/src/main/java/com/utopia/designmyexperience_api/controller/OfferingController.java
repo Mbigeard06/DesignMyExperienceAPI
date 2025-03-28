@@ -188,4 +188,20 @@ public class OfferingController {
         }
     }
 
+    /**
+     * Get all upcoming services (opening > now).
+     * @return List of future services
+     */
+    @GetMapping("/services/upcoming")
+    public ResponseEntity<?> getUpcomingServices() {
+        try {
+            List<Service> services = offeringService.getAllUpcomingServices();
+            return ResponseEntity.ok(services);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "An error occurred while fetching upcoming services", "details", e.getMessage()));
+        }
+    }
+
 }

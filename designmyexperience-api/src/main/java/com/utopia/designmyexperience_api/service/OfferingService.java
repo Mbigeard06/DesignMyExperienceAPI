@@ -95,4 +95,12 @@ public class OfferingService {
     public List<Activity> getUpcomingActivities() {
         return offeringDao.getAllUpcomingActivities();
     }
+
+    /**
+     * Get all services that are still avaible
+     * @return List of available services
+     */
+    public List<Service> getAllUpcomingServices(){
+        return offeringDao.getAllUpcomingServices();
+    }
 }

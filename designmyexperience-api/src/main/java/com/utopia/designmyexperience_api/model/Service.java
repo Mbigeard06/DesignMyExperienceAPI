@@ -1,19 +1,20 @@
 package com.utopia.designmyexperience_api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.utopia.designmyexperience_api.model.enums.OfferingTypes;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Represent a service that extends an offering.
  */
 public class Service extends Offering {
 
-    @JsonProperty("opening")
-    private Date opening;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime opening;
 
-    @JsonProperty("closing")
-    private Date closing;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime closing;
 
     @JsonProperty("onDemand")
     private boolean onDemand;
@@ -24,7 +25,7 @@ public class Service extends Offering {
     // Constructor
     public Service(Long id, String title, String description, int capacity, String location,
                    OfferingTypes type, byte[] picture, double price, BusinessOwner businessOwner,
-                   double duration, Date opening, Date closing, boolean onDemand, String serviceArea) {
+                   double duration, LocalDateTime opening, LocalDateTime closing, boolean onDemand, String serviceArea) {
         setId(id);
         setTitle(title);
         setDescription(description);
@@ -41,19 +42,19 @@ public class Service extends Offering {
         this.serviceArea = serviceArea;
     }
 
-    public Date getOpening() {
+    public LocalDateTime getOpening() {
         return opening;
     }
 
-    public void setOpening(Date opening) {
+    public void setOpening(LocalDateTime opening) {
         this.opening = opening;
     }
 
-    public Date getClosing() {
+    public LocalDateTime getClosing() {
         return closing;
     }
 
-    public void setClosing(Date closing) {
+    public void setClosing(LocalDateTime closing) {
         this.closing = closing;
     }
 

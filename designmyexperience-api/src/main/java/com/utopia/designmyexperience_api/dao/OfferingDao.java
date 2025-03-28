@@ -128,8 +128,8 @@ public class OfferingDao implements IOfferingDao {
                         base.getPrice(),
                         base.getBusinessOwner(),
                         base.getDuration(),
-                        rs.getDate("opening"),
-                        rs.getDate("closing"),
+                        rs.getTimestamp("opening").toLocalDateTime(),
+                        rs.getTimestamp("closing").toLocalDateTime(),
                         rs.getBoolean("ondemand"),
                         rs.getString("servicearea")
                 );
@@ -268,8 +268,8 @@ public class OfferingDao implements IOfferingDao {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, offeringId);
-            stmt.setTimestamp(2, new java.sql.Timestamp(service.getOpening().getTime()));
-            stmt.setTimestamp(3, new java.sql.Timestamp(service.getClosing().getTime()));
+            stmt.setTimestamp(2, Timestamp.valueOf(service.getOpening()));
+            stmt.setTimestamp(3, Timestamp.valueOf(service.getClosing()));
             stmt.setBoolean(4, service.isOnDemand());
             stmt.setString(5, service.getServiceArea());
 
@@ -309,7 +309,6 @@ public class OfferingDao implements IOfferingDao {
             e.printStackTrace();
             throw new RuntimeException("Error fetching upcoming activities", e);
         }
-
         return activities;
     }
 
@@ -377,5 +376,35 @@ public class OfferingDao implements IOfferingDao {
             e.printStackTrace();
             throw new RuntimeException("Error checking remaining capacity for offering ID: " + offeringId, e);
         }
+    }
+
+    /**
+     * Retrieves all upcoming services (closing time after current timestamp).
+     * @return List of upcoming Service offerings.
+     */
+    public List<Service> getAllUpcomingServices() {
+        List<Service> services = new ArrayList<>();
+        String sql = "SELECT * FROM services WHERE closing > ?";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                Service service = getService(id);
+                if (service != null) {
+                    services.add(service);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error fetching upcoming services", e);
+        }
+
+        return services;
     }
 }
