@@ -225,21 +225,25 @@ public class UserDao implements IUserDao {
         return userId;
     }
 
-    /**
-     * Creates a client in the database.
-     * Simply inserts the user into the 'users' table with userType = CLIENT.
-     *
-     * @param client The Client object to be created.
-     * @return The generated user ID associated with the client.
-     */
     @Override
-    public int createClient(Client client, String hasedPassword) {
-
-        // Reuse the createUser() method
-        int userId = createUser(client, hasedPassword);
+    public int createClient(Client client, String hashedPassword) {
+        int userId = createUser(client, hashedPassword);
 
         if (userId == -1) {
             throw new RuntimeException("Failed to create client user.");
+        }
+
+        String sql = "INSERT INTO clients (id) VALUES (?)";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            stmt.executeUpdate(); // No need for RETURNING, we already have the ID
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to insert into clients table", e);
         }
 
         return userId;
