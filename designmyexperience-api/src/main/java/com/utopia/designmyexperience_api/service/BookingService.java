@@ -44,10 +44,10 @@ public class BookingService {
      * @param clientId the ID of the client booking it
      * @return booking ID
      */
-    public int createBooking(int offeringId, int clientId) {
+    public int createBooking(int offeringId, int clientId, int attendeeCount) {
         int remaining = offeringDao.getRemainingCapacity(offeringId) ;
-        if (remaining > 0) {
-            return bookingDao.setBooking(offeringId, clientId);
+        if (remaining >= attendeeCount) {
+            return bookingDao.setBooking(offeringId, clientId, attendeeCount);
         } else {
             throw new RuntimeException("No more capacity available for this offering.");
         }

@@ -56,23 +56,26 @@ public class BookingController {
     }
 
     /**
+     * Create a booking for a client on a given offering, specifying number of attendees.
      *
-     * @param offeringId
-     * @param clientId
-     * @return
+     * @param offeringId   ID of the offering
+     * @param clientId     ID of the client making the booking
+     * @param attendeeCount Number of people included in the booking
+     * @return Response with booking ID or error message
      */
     @PostMapping("/create")
     public ResponseEntity<?> createBooking(@RequestParam("offeringId") int offeringId,
-                                           @RequestParam("clientId") int clientId) {
+                                           @RequestParam("clientId") int clientId,
+                                           @RequestParam("attendeeCount") int attendeeCount) {
         try {
-            int bookingId = bookingService.createBooking(offeringId, clientId);
+            int bookingId = bookingService.createBooking(offeringId, clientId, attendeeCount);
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("bookingId", bookingId));
         } catch (RuntimeException e) {
-            // Si c'est une erreur métier comme "plus de capacité"
+            // Business logic error, e.g. not enough capacity
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            // Toutes les autres erreurs
+            // Other unexpected errors
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to create booking", "details", e.getMessage()));

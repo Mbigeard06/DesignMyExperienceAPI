@@ -24,7 +24,7 @@ public interface IBookingDao {
      * @param client_id client id
      * @return booki
      */
-    int setBooking(int offeringId, int client_id);
+    int setBooking(int offeringId, int client_id, int attendeeCount);
 
     /**
      * Retrieves all bookings associated with a specific offering.

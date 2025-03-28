@@ -56,19 +56,22 @@ public class BookingDao implements IBookingDao {
     /**
      * Creates a new booking for a given offering.
      *
-     * @param  offeringId the offering to be booked
+     * @param offeringId the offering to be booked
+     * @param clientId the ID of the client booking it
+     * @param attendeeCount number of people for this booking
      * @return the generated booking ID
      */
     @Override
-    public int setBooking(int offeringId, int client_id) {
-        String sql = "INSERT INTO bookings (offering_id, client_id, bookingdate) VALUES (?, ?, ?) RETURNING id";
+    public int setBooking(int offeringId, int clientId, int attendeeCount) {
+        String sql = "INSERT INTO bookings (offering_id, client_id, bookingdate, attendee_count) VALUES (?, ?, ?, ?) RETURNING id";
 
         try (Connection conn = databaseConnection.getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, offeringId);
-            stmt.setLong(2, client_id); // Assuming business owner acts as client here
+            stmt.setInt(2, clientId);
             stmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            stmt.setInt(4, attendeeCount);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -125,6 +128,7 @@ public class BookingDao implements IBookingDao {
         booking.setBookingDate(rs.getTimestamp("bookingdate").toLocalDateTime());
         booking.setClient(userService.getClient(rs.getInt("client_id")));
         booking.setOffering(offeringService.getOffering(rs.getInt("offering_id")));
+        booking.setAttendeeCount(rs.getInt("attendee_count"));
         return booking;
     }
 }

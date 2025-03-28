@@ -20,15 +20,19 @@ public class Booking {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime bookingDate;
 
+    @JsonProperty("attendeeCount")
+    private int attendeeCount;
+
     // Constructors
     public Booking() {
     }
 
-    public Booking(Long id, Client client, Offering offering, LocalDateTime bookingDate) {
+    public Booking(Long id, Client client, Offering offering, LocalDateTime bookingDate, int attendeeCount) {
         this.id = id;
         this.client = client;
         this.offering = offering;
         this.bookingDate = bookingDate;
+        this.attendeeCount = attendeeCount;
     }
 
     // Getters and Setters
@@ -63,5 +67,13 @@ public class Booking {
 
     public void setBookingDate(LocalDateTime bookingDate) {
         this.bookingDate = bookingDate;
+    }
+
+    public  int getAttendeeCount(){
+        return this.attendeeCount;
+    }
+
+    public void setAttendeeCount(int id){
+        this.attendeeCount = attendeeCount;
     }
 }
