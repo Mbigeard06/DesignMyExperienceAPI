@@ -407,4 +407,60 @@ public class OfferingDao implements IOfferingDao {
 
         return services;
     }
+
+    @Override
+    public void deleteActivity(int id) {
+        String deleteActivitySQL = "DELETE FROM activities WHERE id = ?";
+        String deleteOfferingSQL = "DELETE FROM offerings WHERE id = ?";
+
+        try (Connection conn = databaseConnection.getDbConnection()) {
+            conn.setAutoCommit(false); // Begin transaction
+
+            try (
+                    PreparedStatement deleteActivityStmt = conn.prepareStatement(deleteActivitySQL);
+                    PreparedStatement deleteOfferingStmt = conn.prepareStatement(deleteOfferingSQL)
+            ) {
+                deleteActivityStmt.setInt(1, id);
+                deleteActivityStmt.executeUpdate();
+
+                deleteOfferingStmt.setInt(1, id);
+                deleteOfferingStmt.executeUpdate();
+
+                conn.commit(); // Commit if both succeed
+            } catch (SQLException e) {
+                conn.rollback(); // Roll back on error
+                throw new RuntimeException("Error deleting activity with ID: " + id, e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database connection error while deleting activity", e);
+        }
+    }
+
+    @Override
+    public void deleteService(int id) {
+        String deleteServiceSQL = "DELETE FROM services WHERE id = ?";
+        String deleteOfferingSQL = "DELETE FROM offerings WHERE id = ?";
+
+        try (Connection conn = databaseConnection.getDbConnection()) {
+            conn.setAutoCommit(false); // Begin transaction
+
+            try (
+                    PreparedStatement deleteServiceStmt = conn.prepareStatement(deleteServiceSQL);
+                    PreparedStatement deleteOfferingStmt = conn.prepareStatement(deleteOfferingSQL)
+            ) {
+                deleteServiceStmt.setInt(1, id);
+                deleteServiceStmt.executeUpdate();
+
+                deleteOfferingStmt.setInt(1, id);
+                deleteOfferingStmt.executeUpdate();
+
+                conn.commit(); // Commit if both succeed
+            } catch (SQLException e) {
+                conn.rollback(); // Roll back on error
+                throw new RuntimeException("Error deleting service with ID: " + id, e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database connection error while deleting service", e);
+        }
+    }
 }

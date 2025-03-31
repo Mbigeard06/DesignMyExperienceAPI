@@ -79,4 +79,16 @@ public interface IOfferingDao {
      * @return List of the upcoming services
      */
     public List<Service> getAllUpcomingServices();
+
+    /**
+     *
+     * @param id service id
+     */
+    public void deleteService(int id);
+
+    /**
+     *
+     * @param id activity id
+     */
+    public void deleteActivity(int id);
 }

@@ -204,4 +204,38 @@ public class OfferingController {
         }
     }
 
+    /**
+     * Delete an activity by ID.
+     * @param id activity ID to delete
+     * @return success or error response
+     */
+    @DeleteMapping("/activities/{id}")
+    public ResponseEntity<?> deleteActivity(@PathVariable int id) {
+        try {
+            offeringService.deleteActivity(id);
+            return ResponseEntity.ok(Map.of("message", "Activity deleted successfully"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to delete activity", "details", e.getMessage()));
+        }
+    }
+
+    /**
+     * Delete a service by ID.
+     * @param id service ID to delete
+     * @return success or error response
+     */
+    @DeleteMapping("/services/{id}")
+    public ResponseEntity<?> deleteService(@PathVariable int id) {
+        try {
+            offeringService.deleteService(id);
+            return ResponseEntity.ok(Map.of("message", "Service deleted successfully"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to delete service", "details", e.getMessage()));
+        }
+    }
+
 }

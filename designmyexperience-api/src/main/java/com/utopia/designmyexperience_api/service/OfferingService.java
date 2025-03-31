@@ -103,4 +103,20 @@ public class OfferingService {
     public List<Service> getAllUpcomingServices(){
         return offeringDao.getAllUpcomingServices();
     }
+
+    /**
+     *
+     * @param serviceId id of the service to be deleted
+     */
+    public void deleteService(int serviceId){
+        this.offeringDao.deleteService(serviceId);
+    }
+
+    /**
+     *
+     * @param activityId id of the activity to be deleted
+     */
+    public void deleteActivity(int activityId){
+        this.offeringDao.deleteActivity(activityId);
+    }
 }

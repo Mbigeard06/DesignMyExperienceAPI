@@ -52,4 +52,5 @@ public class BookingService {
             throw new RuntimeException("No more capacity available for this offering.");
         }
     }
+
 }
