@@ -36,7 +36,7 @@ public class PaymentValidator implements IPaymentValidator {
             }
 
             // Fetch ETH/USD price from a service
-            double ethToUsdRate = getEthPrice(); // Replace with your actual method
+            double ethToUsdRate = getEthPrice();
             BigDecimal valueInEth = Convert.fromWei(tx.getValue().toString(), Convert.Unit.ETHER);
             double sentUsd = valueInEth.doubleValue() * ethToUsdRate;
 
