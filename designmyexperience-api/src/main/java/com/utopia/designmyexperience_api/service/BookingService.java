@@ -97,4 +97,12 @@ public class BookingService {
     public int checkDiscount(String code, int offeringId){
         return this.bookingDao.checkDiscount(code, offeringId);
     }
+
+    /**
+     *
+     * @param bookingId booking id to be deleted
+     */
+    public void deleteBooking(int bookingId){
+        this.bookingDao.deleteBooking(bookingId);
+    }
 }

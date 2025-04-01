@@ -157,6 +157,22 @@ public class BookingDao implements IBookingDao {
     }
 
     @Override
+    public int deleteBooking(int id) {
+        String sql = "DELETE FROM bookings WHERE id = ?";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            return stmt.executeUpdate(); // renvoie le nombre de lignes affectées (1 si supprimé, 0 sinon)
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to delete booking with ID: " + id, e);
+        }
+    }
+
+    @Override
     public int getNumberOfAttendeesAtTime(int serviceId, LocalDateTime date) {
         String sql = """
         SELECT COALESCE(SUM(attendee_count), 0) AS booked

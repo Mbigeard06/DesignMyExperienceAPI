@@ -65,4 +65,11 @@ public interface IBookingDao {
      */
     public int checkDiscount(String discount, int offeringId);
 
+    /**
+     *
+     * @param id id of the booking to be deleted
+     * @return
+     */
+    public int deleteBooking(int id);
+
 }
