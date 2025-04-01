@@ -57,4 +57,12 @@ public interface IBookingDao {
      */
     public int getRemainingCapacity(int offeringId);
 
+    /**
+     *
+     * @param discount discode count
+     * @param offeringId id of the offering to be discounted
+     * @return percentage of discount
+     */
+    public int checkDiscount(String discount, int offeringId);
+
 }

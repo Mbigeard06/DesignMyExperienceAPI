@@ -58,6 +58,14 @@ public class BookingController {
     }
 
 
+    /**
+     *
+     * @param offeringId offering id
+     * @param clientId client id
+     * @param attendeeCount attendee counts
+     * @param bookingDateTime time wanted for the booking
+     * @return
+     */
     @PostMapping("/create")
     public ResponseEntity<?> createBooking(@RequestParam("offeringId") int offeringId,
                                            @RequestParam("clientId") int clientId,
@@ -79,4 +87,24 @@ public class BookingController {
                     .body(Map.of("error", "Failed to create booking", "details", e.getMessage()));
         }
     }
+
+    /**
+     * Check if a discount code is valid for a specific offering and return the percentage.
+     *
+     * @param code Discount code (as request param)
+     * @param offeringId ID of the offering to check against (as request param)
+     * @return JSON containing the discount percentagea
+     */
+    @GetMapping("/check_discount")
+    public ResponseEntity<?> checkDiscount(@RequestParam String code, @RequestParam int offeringId) {
+        try {
+            int discount = bookingService.checkDiscount(code, offeringId);
+            return ResponseEntity.ok(Map.of("discount", discount));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to check discount", "details", e.getMessage()));
+        }
+    }
+
 }

@@ -87,4 +87,14 @@ public class BookingService {
 
         return totalAlreadyBooked + attendeeCount <= capacity;
     }
+
+    /**
+     *
+     * @param code string code
+     * @param offeringId id of the offering to be checked
+     * @return int discount percentage
+     */
+    public int checkDiscount(String code, int offeringId){
+        return this.bookingDao.checkDiscount(code, offeringId);
+    }
 }

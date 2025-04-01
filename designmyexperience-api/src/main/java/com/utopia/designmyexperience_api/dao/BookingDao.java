@@ -128,6 +128,35 @@ public class BookingDao implements IBookingDao {
     }
 
     @Override
+    public int checkDiscount(String discountCode, int offeringId) {
+        String sql = """
+        SELECT amount
+        FROM discounts
+        WHERE code = ?
+          AND offering_id = ?
+          AND CURRENT_DATE BETWEEN startingdate AND endingdate
+    """;
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, discountCode);
+            stmt.setInt(2, offeringId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBigDecimal("amount").intValue(); // Convert 10.00 → 10
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error checking discount for offering ID " + offeringId + " and code " + discountCode, e);
+        }
+
+        return 0; // No valid discount
+    }
+
+    @Override
     public int getNumberOfAttendeesAtTime(int serviceId, LocalDateTime date) {
         String sql = """
         SELECT COALESCE(SUM(attendee_count), 0) AS booked
