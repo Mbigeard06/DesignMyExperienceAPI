@@ -69,13 +69,6 @@ public interface IOfferingDao {
 
     /**
      *
-     * @param offeringId offering id
-     * @return capacity remaining
-     */
-    public int getRemainingCapacity(int offeringId);
-
-    /**
-     *
      * @return List of the upcoming services
      */
     public List<Service> getAllUpcomingServices();

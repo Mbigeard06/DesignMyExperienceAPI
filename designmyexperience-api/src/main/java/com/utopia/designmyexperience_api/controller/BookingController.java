@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import java.util.List;
 import java.util.Map;
@@ -55,27 +57,23 @@ public class BookingController {
         }
     }
 
-    /**
-     * Create a booking for a client on a given offering, specifying number of attendees.
-     *
-     * @param offeringId   ID of the offering
-     * @param clientId     ID of the client making the booking
-     * @param attendeeCount Number of people included in the booking
-     * @return Response with booking ID or error message
-     */
+
     @PostMapping("/create")
     public ResponseEntity<?> createBooking(@RequestParam("offeringId") int offeringId,
                                            @RequestParam("clientId") int clientId,
-                                           @RequestParam("attendeeCount") int attendeeCount) {
+                                           @RequestParam("attendeeCount") int attendeeCount,
+                                           @RequestParam("bookingDateTime") String bookingDateTime) {
         try {
-            int bookingId = bookingService.createBooking(offeringId, clientId, attendeeCount);
+            // Convertir la chaîne en LocalDateTime
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            LocalDateTime bookingDate = LocalDateTime.parse(bookingDateTime, formatter);
+
+            int bookingId = bookingService.createBooking(offeringId, clientId, attendeeCount, bookingDate);
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("bookingId", bookingId));
         } catch (RuntimeException e) {
-            // Business logic error, e.g. not enough capacity
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            // Other unexpected errors
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to create booking", "details", e.getMessage()));

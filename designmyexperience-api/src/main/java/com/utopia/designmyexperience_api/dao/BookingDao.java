@@ -24,12 +24,6 @@ public class BookingDao implements IBookingDao {
         this.offeringService = offeringService;
     }
 
-    /**
-     * Retrieves all bookings for a specific client.
-     *
-     * @param clientId the ID of the client
-     * @return List of Booking objects
-     */
     @Override
     public List<Booking> getBookings(int clientId) {
         List<Booking> bookings = new ArrayList<>();
@@ -53,16 +47,8 @@ public class BookingDao implements IBookingDao {
         return bookings;
     }
 
-    /**
-     * Creates a new booking for a given offering.
-     *
-     * @param offeringId the offering to be booked
-     * @param clientId the ID of the client booking it
-     * @param attendeeCount number of people for this booking
-     * @return the generated booking ID
-     */
     @Override
-    public int setBooking(int offeringId, int clientId, int attendeeCount) {
+    public int setBooking(int offeringId, int clientId, int attendeeCount, LocalDateTime bookingDate) {
         String sql = "INSERT INTO bookings (offering_id, client_id, bookingdate, attendee_count) VALUES (?, ?, ?, ?) RETURNING id";
 
         try (Connection conn = databaseConnection.getDbConnection();
@@ -70,7 +56,7 @@ public class BookingDao implements IBookingDao {
 
             stmt.setLong(1, offeringId);
             stmt.setInt(2, clientId);
-            stmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            stmt.setTimestamp(3, Timestamp.valueOf(bookingDate));
             stmt.setInt(4, attendeeCount);
 
             ResultSet rs = stmt.executeQuery();
@@ -86,12 +72,6 @@ public class BookingDao implements IBookingDao {
         return -1;
     }
 
-    /**
-     * Retrieves all bookings associated with a specific offering.
-     *
-     * @param id of the offering object
-     * @return list of bookings associated to the offering
-     */
     @Override
     public List<Booking> getBookingOffering(int id) {
         List<Booking> bookings = new ArrayList<>();
@@ -114,6 +94,67 @@ public class BookingDao implements IBookingDao {
 
         return bookings;
     }
+
+    public int getRemainingCapacity(int offeringId) {
+        String capacitySql = "SELECT capacity FROM offerings WHERE id = ?";
+        String countSql = "SELECT COALESCE(SUM(attendee_count), 0) AS booked FROM bookings WHERE offering_id = ?";
+
+        try (Connection conn = databaseConnection.getDbConnection()) {
+            int capacity = 0;
+            int booked = 0;
+
+            try (PreparedStatement stmt = conn.prepareStatement(capacitySql)) {
+                stmt.setInt(1, offeringId);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    capacity = rs.getInt("capacity");
+                }
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
+                stmt.setInt(1, offeringId);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    booked = rs.getInt("booked");
+                }
+            }
+
+            return capacity - booked;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error checking remaining capacity for offering ID: " + offeringId, e);
+        }
+    }
+
+    @Override
+    public int getNumberOfAttendeesAtTime(int serviceId, LocalDateTime date) {
+        String sql = """
+        SELECT COALESCE(SUM(attendee_count), 0) AS booked
+        FROM bookings
+        WHERE offering_id = ?
+        AND DATE_TRUNC('hour', bookingdate) = DATE_TRUNC('hour', ?::timestamp)
+    """;
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, serviceId);
+            stmt.setTimestamp(2, Timestamp.valueOf(date));
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("booked");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error checking number of attendees for service " + serviceId + " at " + date, e);
+        }
+
+        return 0;
+    }
+
 
     /**
      * Helper method to build a Booking object from ResultSet.

@@ -341,44 +341,6 @@ public class OfferingDao implements IOfferingDao {
     }
 
     /**
-     * Returns the number of available spots for a given offering.
-     *
-     * @param offeringId the ID of the offering
-     * @return number of spots left
-     */
-    public int getRemainingCapacity(int offeringId) {
-        String capacitySql = "SELECT capacity FROM offerings WHERE id = ?";
-        String countSql = "SELECT COUNT(*) AS booked FROM bookings WHERE offering_id = ?";
-
-        try (Connection conn = databaseConnection.getDbConnection()) {
-            int capacity = 0;
-            int booked = 0;
-
-            try (PreparedStatement stmt = conn.prepareStatement(capacitySql)) {
-                stmt.setInt(1, offeringId);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    capacity = rs.getInt("capacity");
-                }
-            }
-
-            try (PreparedStatement stmt = conn.prepareStatement(countSql)) {
-                stmt.setInt(1, offeringId);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    booked = rs.getInt("booked");
-                }
-            }
-
-            return capacity - booked;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error checking remaining capacity for offering ID: " + offeringId, e);
-        }
-    }
-
-    /**
      * Retrieves all upcoming services (closing time after current timestamp).
      * @return List of upcoming Service offerings.
      */
