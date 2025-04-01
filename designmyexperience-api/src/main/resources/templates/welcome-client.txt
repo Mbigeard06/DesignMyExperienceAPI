@@ -1,0 +1,11 @@
+Bonjour ${name},
+
+Bienvenue sur DesignMyExperience ! 🧭
+
+Vous êtes maintenant membre de notre communauté de clients passionnés.
+Réservez facilement des activités uniques et des services de qualité près de chez vous.
+
+🗓️ En quelques clics, vivez des expériences inoubliables.
+
+Merci pour votre inscription,
+L'équipe DesignMyExperience ✨

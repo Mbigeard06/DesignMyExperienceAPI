@@ -1,0 +1,11 @@
+Bonjour ${name} de ${businessName},
+
+Bienvenue en tant que partenaire professionnel sur DesignMyExperience ! 🚀
+
+Votre compte a été créé avec succès.
+Vous pouvez désormais proposer vos activités et services à notre communauté de clients.
+
+🎯 Gagnez en visibilité et développez votre activité grâce à notre plateforme.
+
+Nous sommes ravis de vous compter parmi nous,
+L'équipe DesignMyExperience ✨

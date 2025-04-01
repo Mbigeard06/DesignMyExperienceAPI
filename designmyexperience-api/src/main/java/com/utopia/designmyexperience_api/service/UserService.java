@@ -11,10 +11,12 @@ import java.util.List;
 @Service
 public class UserService {
     private final IUserDao userDao;
+    private final EmailService emailService;
 
     // Constructor injection
-    public UserService(IUserDao userDao) {
+    public UserService(IUserDao userDao, EmailService emailService) {
         this.userDao = userDao;
+        this.emailService = emailService;
     }
 
     /**
@@ -59,7 +61,11 @@ public class UserService {
      * @return index of the business owner created (-1 if failed)
      */
     public int createBusinessOwner(BusinessOwner businessOwner, String password){
-        return userDao.createBusinessOwner(businessOwner, password);
+        int userId = userDao.createBusinessOwner(businessOwner, password);
+        if (userId != -1) {
+            emailService.welcomeBusinessOwner(businessOwner); // ✅ email envoyé uniquement si création OK
+        }
+        return userId;
     }
 
     /**
@@ -69,7 +75,11 @@ public class UserService {
      * @return index of the client created (-1 if failed)
      */
     public int createClient(Client client, String password){
-        return userDao.createClient(client, password);
+        int userId = userDao.createClient(client, password);
+        if (userId != -1) {
+            emailService.welcomeClient(client); // Email sent if email sucessfull
+        }
+        return userId;
     }
 
     /**
