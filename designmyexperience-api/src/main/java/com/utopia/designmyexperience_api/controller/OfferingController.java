@@ -238,4 +238,20 @@ public class OfferingController {
         }
     }
 
+    /**
+     * Delete an offering by ID.
+     * @param id offering ID to delete
+     * @return success or error response
+     */
+    @DeleteMapping("/delete_offering/{id}")
+    public ResponseEntity<?> deleteOffering(@PathVariable int id) {
+        try {
+            offeringService.deleteOffering(id);
+            return ResponseEntity.ok(Map.of("message", "Offering deleted successfully"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to delete offering", "details", e.getMessage()));
+        }
+    }
 }

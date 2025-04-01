@@ -5,7 +5,9 @@ import com.utopia.designmyexperience_api.dao.OfferingDao;
 import com.utopia.designmyexperience_api.model.Activity;
 import com.utopia.designmyexperience_api.model.Offering;
 import com.utopia.designmyexperience_api.model.Service;
+import com.utopia.designmyexperience_api.model.enums.OfferingTypes;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -118,5 +120,23 @@ public class OfferingService {
      */
     public void deleteActivity(int activityId){
         this.offeringDao.deleteActivity(activityId);
+    }
+
+    /**
+     * Delete an offering based on its type (activity or service)
+     * @param offeringId the ID of the offering to delete
+     */
+    public void deleteOffering(int offeringId){
+        Offering offering = getOffering(offeringId);
+        if (offering == null) {
+            throw new RuntimeException("Offering not found with ID: " + offeringId);
+        }
+        if (offering.getType() == OfferingTypes.Activity) {
+            deleteActivity(offeringId);
+        } else if (offering.getType() == OfferingTypes.Service) {
+            deleteService(offeringId);
+        } else {
+            throw new RuntimeException("Unknown offering type for offering ID: " + offeringId);
+        }
     }
 }

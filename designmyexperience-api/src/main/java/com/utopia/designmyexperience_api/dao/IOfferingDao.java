@@ -91,4 +91,5 @@ public interface IOfferingDao {
      * @param id activity id
      */
     public void deleteActivity(int id);
+
 }
