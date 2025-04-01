@@ -56,7 +56,6 @@ The API is organized with a **clear and modular folder structure**:
 
 ## 🔒 Security
 
-- 🔐 **JWT Authentication** secures all endpoints.  
 - 🛡️ **Input validation** protects against SQL injection and XSS attacks.  
 - 🧑‍💼 **Role-based access control** for Clients, Business Owners, and Admins.  
 
