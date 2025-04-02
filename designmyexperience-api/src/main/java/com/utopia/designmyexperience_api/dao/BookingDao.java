@@ -173,6 +173,49 @@ public class BookingDao implements IBookingDao {
     }
 
     @Override
+    public int registerBookingPayment(String transactionHash, int bookingId) {
+        String sql = """
+        INSERT INTO booking_payments (transaction_hash, booking_id, validated)
+        VALUES (?, ?, true)
+        RETURNING id;
+    """;
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, transactionHash);
+            stmt.setInt(2, bookingId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            } else {
+                throw new RuntimeException("Failed to register booking payment for booking ID: " + bookingId);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error registering payment for booking " + bookingId, e);
+        }
+    }
+
+    @Override
+    public boolean transactionAlreadyUsed(String transactionHash) {
+        String sql = "SELECT 1 FROM booking_payments WHERE transaction_hash = ? LIMIT 1";
+
+        try (Connection conn = databaseConnection.getDbConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, transactionHash);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next(); // true si au moins une ligne existe
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking if transaction exists: " + transactionHash, e);
+        }
+    }
+
+    @Override
     public int getNumberOfAttendeesAtTime(int serviceId, LocalDateTime date) {
         String sql = """
         SELECT COALESCE(SUM(attendee_count), 0) AS booked

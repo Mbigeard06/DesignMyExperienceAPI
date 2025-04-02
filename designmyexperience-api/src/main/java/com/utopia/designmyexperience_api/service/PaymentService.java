@@ -19,6 +19,10 @@ public class PaymentService {
         this.paymentValidator = new PaymentValidator();
     }
 
+    public int registerPayment(String transactionHash, int bookingId){
+        return this.bookingService.registerBookingPayment(transactionHash, bookingId);
+    }
+
     /**
      * Validates an Ethereum transaction by its hash after creating a booking.
      * If the transaction is invalid, the booking is deleted.
@@ -42,6 +46,11 @@ public class PaymentService {
                     bookingDate
             );
 
+            if(bookingService.transactionAlreadyUsed(validateBookingRequest.getTransactionHash())){
+                throw new RuntimeException("Transaction have already been used to make a booking.");
+            }
+
+
             // Step 2: Validate Ethereum payment
             boolean isValid = paymentValidator.validatePayment(
                     validateBookingRequest.getTransactionHash(),
@@ -53,6 +62,8 @@ public class PaymentService {
                 bookingService.deleteBooking(bookingId);
                 throw new RuntimeException("Payment could not be validated. Booking has been cancelled.");
             }
+
+            bookingService.registerBookingPayment(validateBookingRequest.getTransactionHash(), bookingId);
 
             return true;
 

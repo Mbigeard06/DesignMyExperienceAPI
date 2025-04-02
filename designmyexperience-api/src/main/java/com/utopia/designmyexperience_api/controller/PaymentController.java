@@ -35,7 +35,6 @@ public class PaymentController {
     public ResponseEntity<?> validateBooking(@RequestBody ValidateBookingRequest requestDto) {
         try {
             boolean isValid = paymentService.validateBookingWithTransaction(requestDto);
-
             if (isValid) {
                 return ResponseEntity.ok(Map.of(
                         "status", "success",

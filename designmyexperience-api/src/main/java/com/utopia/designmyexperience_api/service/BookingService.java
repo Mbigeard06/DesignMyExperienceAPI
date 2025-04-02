@@ -105,4 +105,23 @@ public class BookingService {
     public void deleteBooking(int bookingId){
         this.bookingDao.deleteBooking(bookingId);
     }
+
+    /**
+     *
+     * @param transactionHash blockchain transaction hash
+     * @return boolean -> does the transaction hash is already in used ?
+     */
+    public boolean transactionAlreadyUsed(String transactionHash){
+        return this.bookingDao.transactionAlreadyUsed(transactionHash);
+    }
+
+    /**
+     *
+     * @param transactionHash blockchain hash transaction
+     * @param bookingId bookin id
+     * @return payment id
+     */
+    public int registerBookingPayment(String transactionHash, int bookingId){
+        return this.bookingDao.registerBookingPayment(transactionHash, bookingId);
+    }
 }

@@ -72,4 +72,18 @@ public interface IBookingDao {
      */
     public int deleteBooking(int id);
 
+    /**
+     *
+     * @param transactionHash blockchain hash transaction
+     * @param bookingId booking id
+     * @return booking payment id
+     */
+    public int registerBookingPayment(String transactionHash, int bookingId);
+
+    /**
+     * Check if the transaction hash has already been used to book another offering
+     * @param transactionHash blockchain hash transaction
+     * @return Boolean
+     */
+    public boolean transactionAlreadyUsed(String transactionHash);
 }
