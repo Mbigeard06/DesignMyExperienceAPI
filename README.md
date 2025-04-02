@@ -24,39 +24,79 @@ The API is organized with a **clear and modular folder structure**:
 
 ---
 
-## 🔌 API Endpoints
+## 🔐 Security & Authentication
 
-| **Method** | **Endpoint**                         | **Description**                                                                 |
-|------------|--------------------------------------|---------------------------------------------------------------------------------|
-| `POST`     | `/api/users/login`                   | Authenticates a user by email and password.                                     |
-| `POST`     | `/api/users/clients`                 | Creates a new client user.                                                      |
-| `POST`     | `/api/users/business-owners`         | Creates a new business owner user.                                              |
-| `GET`      | `/api/users/{id}`                    | Retrieves a user by ID.                                                         |
-| `GET`      | `/api/users`                         | Retrieves a list of all users.                                                  |
-| `GET`      | `/api/users/clients/{id}`            | Retrieves a client user by ID.                                                  |
-| `GET`      | `/api/users/business-owners/{id}`    | Retrieves a business owner user by ID.                                          |
-| `GET`      | `/api/offerings`                     | Retrieves all offerings.                                                        |
-| `GET`      | `/api/offerings/{id}`                | Retrieves a specific offering by ID.                                            |
-| `GET`      | `/api/offerings/business-owner/{id}` | Retrieves offerings by business owner ID.                                       |
-| `GET`      | `/api/offerings/activities/{id}`     | Retrieves an activity offering by ID.                                           |
-| `GET`      | `/api/offerings/services/{id}`       | Retrieves a service offering by ID.                                             |
-| `POST`     | `/api/offerings/activities`          | Creates a new activity offering.                                                |
-| `POST`     | `/api/offerings/services`            | Creates a new service offering.                                                 |
-| `GET`      | `/api/bookings/client/{clientId}`    | Retrieves all bookings for a specific client.                                   |
-| `GET`      | `/api/bookings/offering/{offeringId}`| Retrieves all bookings related to a specific offering.                          |
-| `POST`     | `/api/bookings/create`               | Creates a booking (with attendee count) for a specific offering and client.     |
-| `GET`      | `/api/bookings/check-availability`   | Checks if a service offering is available at a given time for given attendees.  |
-| `POST`     | `/api/bookings/validate-payment`     | Validates an Ethereum payment and confirms or deletes the booking.              |
+- 🔒 **Password Hashing**: All user passwords are hashed using **BCrypt** before being stored in the database. This ensures that even if the DB is compromised, original passwords remain secure.
+- 🔄 **Password Comparison**: During login, input passwords are hashed and then compared with the stored hashed version.
+- 🧾 **Crypto Payments**: Users can book services or activities by paying in **Ethereum**. The API checks the blockchain (Sepolia network) to verify:
+  - the amount sent (converted from expected USD amount),
+  - the receiver address,
+  - and ensures the transaction is confirmed and not reused.
 
 ---
 
-✅ **Swagger UI** is available for easy API testing and exploration.
+## 📧 Email SMTP Integration
+
+- ✅ **Account Confirmation**: When a new client or business owner is created, a confirmation email is sent via **SMTP**.
+- 🛡️ **Secure Sending**: Uses authenticated SMTP session (via Gmail or custom mail provider).
+- 🔄 **Modular Design**: Email sending logic is handled by a dedicated **EmailService**.
 
 ---
 
-## 🔒 Security
+## 🚀 API Endpoints
 
-- 🛡️ **Input validation** protects against SQL injection and XSS attacks.  
-- 🧑‍💼 **Role-based access control** for Clients, Business Owners, and Admins.  
+### 👤 Users
+- `GET /api/users/{id}` – Get user by ID
+- `GET /api/users` – Get all users
+- `POST /api/users/clients` – Create a new client
+- `POST /api/users/business-owners` – Create a new business owner
+- `POST /api/users/login` – Login with email and password
+
+### 🧾 Bookings
+- `POST /api/bookings/create` – Create a new booking (specify offering ID, client ID, etc.)
+- `GET /api/bookings/client/{clientId}` – Get all bookings by a client
+- `GET /api/bookings/offering/{offeringId}` – Get all bookings for an offering
+- `GET /api/bookings/check_discount` – Check if a discount code is valid for a given offering
+
+### 💸 Payments
+- `POST /api/payments/validate` – Validate an Ethereum payment by checking:
+  - Transaction hash
+  - Amount sent
+  - If the booking exists and hasn’t been paid before
+
+### 🎭 Offerings
+- `GET /api/offerings/business-owner/{id}` – Get offerings by business owner
+- `GET /api/offerings/{id}` – Get a specific offering
+- `GET /api/offerings` – Get all offerings
+- `POST /api/offerings/activities` – Create a new activity
+- `POST /api/offerings/services` – Create a new service
+- `DELETE /api/offerings/delete_offering/{id}` – Delete an offering
 
 ---
+
+## 🛠 Technologies
+
+- Java 17
+- Spring Boot
+- PostgreSQL
+- Web3j (Ethereum blockchain interaction)
+- JavaMail (SMTP)
+- BCrypt (Password security)
+
+---
+
+## 🧪 Coming Soon
+
+- 🔐 Email verification token system
+- 📊 Booking statistics for business owners
+- 🌍 Frontend interface (React or Android)
+
+---
+
+## 🧑‍💻 Authors
+
+- Developed by **Mateo Bigeard Dasen**
+
+---
+
+> "Design your experience, securely." 🛡️🎉
