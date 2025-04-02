@@ -5,6 +5,7 @@ import com.utopia.designmyexperience_api.model.BusinessOwner;
 import com.utopia.designmyexperience_api.model.Client;
 import com.utopia.designmyexperience_api.model.User;
 import com.utopia.designmyexperience_api.model.enums.UserTypes;
+import com.utopia.designmyexperience_api.utility.PasswordUtils;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -259,7 +260,7 @@ public class UserDao implements IUserDao {
 
             if (rs.next()) {
                 String hashedPwd = rs.getString("hashedpwd");
-                if (hashedPwd.equals(plainPassword)) {
+                if (PasswordUtils.verifyPassword(plainPassword, hashedPwd)) {
                     return new User(
                             rs.getLong("id"),
                             rs.getString("firstName"),

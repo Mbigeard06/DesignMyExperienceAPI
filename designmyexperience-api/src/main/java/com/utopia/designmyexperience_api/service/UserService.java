@@ -4,6 +4,7 @@ import com.utopia.designmyexperience_api.dao.IUserDao;
 import com.utopia.designmyexperience_api.model.BusinessOwner;
 import com.utopia.designmyexperience_api.model.Client;
 import com.utopia.designmyexperience_api.model.User;
+import com.utopia.designmyexperience_api.utility.PasswordUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public class UserService {
      * @return index of the business owner created (-1 if failed)
      */
     public int createBusinessOwner(BusinessOwner businessOwner, String password){
-        int userId = userDao.createBusinessOwner(businessOwner, password);
+        int userId = userDao.createBusinessOwner(businessOwner, PasswordUtils.hashPassword(password));
         if (userId != -1) {
             emailService.welcomeBusinessOwner(businessOwner); 
         }
@@ -75,7 +76,7 @@ public class UserService {
      * @return index of the client created (-1 if failed)
      */
     public int createClient(Client client, String password){
-        int userId = userDao.createClient(client, password);
+        int userId = userDao.createClient(client, PasswordUtils.hashPassword(password));
         if (userId != -1) {
             emailService.welcomeClient(client); // Email sent if email sucessfull
         }
