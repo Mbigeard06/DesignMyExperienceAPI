@@ -63,7 +63,7 @@ public class UserService {
     public int createBusinessOwner(BusinessOwner businessOwner, String password){
         int userId = userDao.createBusinessOwner(businessOwner, password);
         if (userId != -1) {
-            emailService.welcomeBusinessOwner(businessOwner); // ✅ email envoyé uniquement si création OK
+            emailService.welcomeBusinessOwner(businessOwner); 
         }
         return userId;
     }
