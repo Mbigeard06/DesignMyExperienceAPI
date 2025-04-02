@@ -49,15 +49,7 @@ public class BookingService {
      * @return booking ID
      */
     public int createBooking(int offeringId, int clientId, int attendeeCount, LocalDateTime date) {
-        Offering offering = this.offeringDao.getOffering(offeringId);
-
-        boolean hasCapacity = switch (offering.getType()) {
-            case Activity -> bookingDao.getRemainingCapacity(offeringId) >= attendeeCount;
-            case Service -> capacityLeft(offering, attendeeCount, date);
-            default -> throw new RuntimeException("Unrecognized type of offering");
-        };
-
-        if (hasCapacity) {
+        if (isBookable(offeringId, clientId, attendeeCount, date)) {
             return bookingDao.setBooking(offeringId, clientId, attendeeCount, date);
         } else {
             throw new RuntimeException("No more capacity available for this offering.");
@@ -123,5 +115,23 @@ public class BookingService {
      */
     public int registerBookingPayment(String transactionHash, int bookingId){
         return this.bookingDao.registerBookingPayment(transactionHash, bookingId);
+    }
+
+    /**
+     * Checks whether an offering is bookable for a given client, attendee count, and date.
+     *
+     * @param offeringId    the ID of the offering
+     * @param clientId      the ID of the client
+     * @param attendeeCount the number of attendees for the booking
+     * @param date          the date and time of the offering
+     * @return true if the offering is bookable, false otherwise
+     */
+    public boolean isBookable(int offeringId, int clientId, int attendeeCount, LocalDateTime date) {
+        Offering offering = this.offeringDao.getOffering(offeringId);
+        return switch (offering.getType()) {
+            case Activity -> this.bookingDao.getRemainingCapacity(offeringId) >= attendeeCount;
+            case Service -> capacityLeft(offering, attendeeCount, date);
+            default -> throw new RuntimeException("Unrecognized type of offering");
+        };
     }
 }

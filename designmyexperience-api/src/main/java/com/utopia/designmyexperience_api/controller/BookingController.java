@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import java.util.List;
 import java.util.Map;
 
@@ -59,32 +59,34 @@ public class BookingController {
 
 
     /**
+     * Checks whether a booking can be made for a given offering, client, attendee count, and date.
      *
-     * @param offeringId offering id
-     * @param clientId client id
-     * @param attendeeCount attendee counts
-     * @param bookingDateTime time wanted for the booking
-     * @return
+     * @param offeringId      offering id
+     * @param clientId        client id
+     * @param attendeeCount   attendee count
+     * @param bookingDateTime desired booking time in ISO_LOCAL_DATE_TIME format (e.g., 2025-04-04T14:00)
+     * @return ResponseEntity with true if bookable, or an error if not
      */
-    @PostMapping("/create")
-    public ResponseEntity<?> createBooking(@RequestParam("offeringId") int offeringId,
-                                           @RequestParam("clientId") int clientId,
-                                           @RequestParam("attendeeCount") int attendeeCount,
-                                           @RequestParam("bookingDateTime") String bookingDateTime) {
+    @PostMapping("/checkBooking")
+    public ResponseEntity<?> checkBooking(@RequestParam("offeringId") int offeringId,
+                                          @RequestParam("clientId") int clientId,
+                                          @RequestParam("attendeeCount") int attendeeCount,
+                                          @RequestParam("bookingDateTime") String bookingDateTime) {
         try {
-            // Convertir la chaîne en LocalDateTime
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
             LocalDateTime bookingDate = LocalDateTime.parse(bookingDateTime, formatter);
 
-            int bookingId = bookingService.createBooking(offeringId, clientId, attendeeCount, bookingDate);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("bookingId", bookingId));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", e.getMessage()));
+            boolean isBookable = bookingService.isBookable(offeringId, clientId, attendeeCount, bookingDate);
+            if (!isBookable) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "The offering is not available at the selected time or there is not enough capacity."));
+            }
+
+            return ResponseEntity.ok(Map.of("isBookable", true));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to create booking", "details", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Invalid request", "details", e.getMessage()));
         }
     }
 
