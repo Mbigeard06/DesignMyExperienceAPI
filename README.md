@@ -57,6 +57,7 @@ The API is organized with a **clear and modular folder structure**:
 - `GET /api/bookings/client/{clientId}` – Get all bookings by a client
 - `GET /api/bookings/offering/{offeringId}` – Get all bookings for an offering
 - `GET /api/bookings/check_discount` – Check if a discount code is valid for a given offering
+- `GET /api/bookings/checkBooking` – Check if a discount code is valid for a given offering
 
 ### 💸 Payments
 - `POST /api/payments/validate` – Validate an Ethereum payment by checking:
